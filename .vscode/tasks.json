@@ -37,6 +37,40 @@
 				"/consoleloggerparameters:NoSummary"
 			],
 			"problemMatcher": "$msCompile"
+		},
+        {
+			"label": "addMigration",
+			"command": "dotnet",
+			"type": "shell",
+			"args": [
+				"ef",
+				"--startup-project",
+                "${workspaceFolder}/src/LoginShmogin.Web/",
+				"migrations",
+				"add",
+                "${input:migrationName}"
+			],
+			"problemMatcher": "$msCompile"
+		},
+        {
+			"label": "updateDatabase",
+			"command": "dotnet",
+			"type": "shell",
+			"args": [
+				"ef",
+				"--startup-project",
+                "${workspaceFolder}/src/LoginShmogin.Web/",
+				"database",
+				"update"
+			],
+			"problemMatcher": "$msCompile"
 		}
-	]
+	],
+    "inputs": [
+        {
+          "id": "migrationName",
+          "type": "promptString",
+          "description": "Migration name",
+        }
+    ]
 }

@@ -1,0 +1,10 @@
+@page
+@model LoginShmogin.Web.Pages.IndexModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<div>
+    @foreach (var user in Model.Users)
+    {
+        <p>@user.UserName</p><br/>
+    }
+</div>

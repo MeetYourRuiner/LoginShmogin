@@ -3,6 +3,8 @@ using LoginShmogin.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using LoginShmogin.Infrastructure.Authentication.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace LoginShmogin.Infrastructure
 {
@@ -12,6 +14,9 @@ namespace LoginShmogin.Infrastructure
 		{
 			services.AddDbContext<AppDbContext>(options =>
 				options.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
+				
+			services.AddIdentity<ApplicationUser, IdentityRole>()
+				.AddEntityFrameworkStores<AppDbContext>();
 			return services;
 		}
 	}

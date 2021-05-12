@@ -15,14 +15,15 @@ namespace LoginShmogin.Web
     public class Startup
     {
         public IConfiguration Configuration { get; }
-		public Startup(IConfiguration configuration)
-		{
-			Configuration = configuration;
-		}
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
 
         public void ConfigureServices(IServiceCollection services)
         {
-			services.AddInfrastructure(Configuration);
+            services.AddInfrastructure(Configuration);
+            services.AddRazorPages();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -31,15 +32,15 @@ namespace LoginShmogin.Web
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseStaticFiles();
             app.UseRouting();
+            
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                endpoints.MapRazorPages();
             });
         }
     }
