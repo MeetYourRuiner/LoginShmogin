@@ -42,35 +42,31 @@ namespace LoginShmogin.Web.Pages
         {
 
         }
-        
-        public void OnPost()
+
+        public async Task<IActionResult> OnPostAsync()
         {
-            
+            if (ModelState.IsValid)
+            {
+                ApplicationUser newUser = new ApplicationUser
+                {
+                    Email = Email,
+                    UserName = Email
+                };
+                var result = await _userManager.CreateAsync(newUser, Password);
+                if (result.Succeeded)
+                {
+                    await _signInManager.SignInAsync(newUser, false);
+                    return RedirectToPage("/Index");
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+            }
+            return Page();
         }
-        // public async Task<IActionResult> OnPostAsync()
-        // {
-        //     if (ModelState.IsValid)
-        //     {
-        //         ApplicationUser newUser = new ApplicationUser
-        //         {
-        //             Email = Email,
-        //             UserName = Email
-        //         };
-        //         var result = await _userManager.CreateAsync(newUser, Password);
-        //         if (result.Succeeded)
-        //         {
-        //             await _signInManager.SignInAsync(newUser, false);
-        //             return RedirectToPage("/Index");
-        //         }
-        //         else
-        //         {
-        //             foreach (var error in result.Errors)
-        //             {
-        //                 ModelState.AddModelError(string.Empty, error.Description);
-        //             }
-        //         }
-        //     }
-        //     return Page();
-        // }
     }
 }

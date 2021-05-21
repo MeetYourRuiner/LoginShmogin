@@ -16,8 +16,10 @@ namespace LoginShmogin.Infrastructure
 				options.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
 				
 			services.AddIdentity<ApplicationUser, IdentityRole>()
-				.AddEntityFrameworkStores<AppDbContext>();
-			return services;
+				.AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders();
+                
+            return services;
 		}
 	}
 }
