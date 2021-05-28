@@ -1,0 +1,36 @@
+﻿@page
+@model LoginShmogin.Web.Pages.RolesModel
+@{
+}
+<div>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Roles[0].Name)</th>
+                <th class="th-fit"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Roles)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        <form asp-page-handler="delete" asp-route-id="@item.Id" method="post">
+                            <button class="btn btn-sm btn-danger">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <form asp-page="./Create">
+        <button class="btn btn-primary" >
+            Add
+        </button>
+    </form>
+</div>

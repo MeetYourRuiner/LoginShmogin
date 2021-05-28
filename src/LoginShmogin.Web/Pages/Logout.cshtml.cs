@@ -20,7 +20,7 @@ namespace LoginShmogin.Web.Pages
             _logger = logger;
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnGetAsync(string returnUrl = null)
         {
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");

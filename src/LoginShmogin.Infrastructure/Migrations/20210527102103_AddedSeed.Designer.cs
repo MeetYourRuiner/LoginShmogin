@@ -3,14 +3,16 @@ using System;
 using LoginShmogin.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LoginShmogin.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210527102103_AddedSeed")]
+    partial class AddedSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -84,13 +86,13 @@ namespace LoginShmogin.Infrastructure.Migrations
                         {
                             Id = "B22698B8-42A2-4115-9631-1C2D1E2AC5F7",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2a9f262f-feb7-41ee-8680-51dd31acee07",
+                            ConcurrencyStamp = "f1715f36-1e2a-49ef-affe-ca426f97eddc",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEOrSoHi4SDg935vOdMLqo1WQba9ZUrAkpfmGd6SPSFJIJdnTkFrnHdNl5nb2uHG3Yg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBh/hGLr+CE+OIv0Rlkek99FYtD472M/fmp5bvVVTsHBgob+XGHN6fhrqhXJPbCE7A==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "00000000-0000-0000-0000-000000000000",
                             TwoFactorEnabled = false,
@@ -127,14 +129,14 @@ namespace LoginShmogin.Infrastructure.Migrations
                         new
                         {
                             Id = "808ecb6e-857f-477e-afff-90b844e647af",
-                            ConcurrencyStamp = "7875acdc-6cc3-47b8-83fc-d50f422dc8e9",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
+                            ConcurrencyStamp = "a20c00a4-8f63-4064-aaba-0e43cd0c101e",
+                            Name = "Administrator",
+                            NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
                             Id = "2d0341e8-928e-462e-8349-9172d8c919ef",
-                            ConcurrencyStamp = "2210726a-c171-4f18-8c69-aa1def0a0dba",
+                            ConcurrencyStamp = "5988c60d-1feb-4bf8-a800-e8060cabdf6e",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -221,13 +223,6 @@ namespace LoginShmogin.Infrastructure.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = "B22698B8-42A2-4115-9631-1C2D1E2AC5F7",
-                            RoleId = "808ecb6e-857f-477e-afff-90b844e647af"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>

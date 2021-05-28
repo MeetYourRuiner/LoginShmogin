@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using LoginShmogin.Core.Entities;
 using LoginShmogin.Infrastructure.Authentication.Identity;
 using LoginShmogin.Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace LoginShmogin.Web.Pages
 {
+    [AllowAnonymous]
     public class IndexModel : PageModel
     {
 		private readonly AppDbContext _context;

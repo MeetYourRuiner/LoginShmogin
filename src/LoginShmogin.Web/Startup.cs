@@ -23,7 +23,18 @@ namespace LoginShmogin.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddInfrastructure(Configuration);
-            services.AddRazorPages();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireAdministratorRole",
+                    policy => policy.RequireRole("Admin"));
+            });
+            services.AddRazorPages(
+                options =>
+                {
+                    options.Conventions.AuthorizeFolder("/Users", "RequireAdministratorRole");
+                    options.Conventions.AuthorizeFolder("/Roles", "RequireAdministratorRole");
+                }
+            );
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -34,13 +45,15 @@ namespace LoginShmogin.Web
             }
             app.UseStaticFiles();
             app.UseRouting();
-            
+
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
+                endpoints
+                    .MapRazorPages()
+                    .RequireAuthorization();
             });
         }
     }

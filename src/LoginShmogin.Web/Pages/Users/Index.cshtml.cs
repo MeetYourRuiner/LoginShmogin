@@ -11,15 +11,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LoginShmogin.Web.Pages
 {
-    public class ManageModel : PageModel
+    public class UsersModel : PageModel
     {
         private readonly AppDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         
-        [BindProperty]
         public IList<ApplicationUser> Users { get; set; }
 
-        public ManageModel(AppDbContext context, UserManager<ApplicationUser> userManager)
+        public UsersModel(AppDbContext context, UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
             _context = context;

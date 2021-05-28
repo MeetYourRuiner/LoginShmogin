@@ -4,12 +4,14 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using LoginShmogin.Infrastructure.Authentication.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace LoginShmogin.Web.Pages
 {
+    [AllowAnonymous]
     public class LoginModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -26,6 +28,7 @@ namespace LoginShmogin.Web.Pages
         [Display(Name = "Пароль")]
         public string Password { get; set; }
 
+        [BindProperty]
         [Display(Name = "Запомнить?")]
         public bool RememberMe { get; set; }
 
@@ -35,10 +38,6 @@ namespace LoginShmogin.Web.Pages
         {
             _userManager = userManager;
             _signInManager = signInManager;
-        }
-
-        public void OnGet()
-        {
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)

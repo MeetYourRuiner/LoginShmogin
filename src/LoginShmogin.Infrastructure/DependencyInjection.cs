@@ -8,18 +8,48 @@ using Microsoft.AspNetCore.Identity;
 
 namespace LoginShmogin.Infrastructure
 {
-	public static class DependencyInjection
-	{
-		public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
-		{
-			services.AddDbContext<AppDbContext>(options =>
-				options.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
-				
-			services.AddIdentity<ApplicationUser, IdentityRole>()
-				.AddEntityFrameworkStores<AppDbContext>()
+    public static class DependencyInjection
+    {
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
-                
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Password settings.
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequiredUniqueChars = 1;
+
+                // Lockout settings.
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.AllowedForNewUsers = true;
+
+                // User settings.
+                options.User.AllowedUserNameCharacters =
+                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+                options.User.RequireUniqueEmail = true;
+            });
+            services.ConfigureApplicationCookie(options =>
+                {
+                    // Cookie settings
+                    options.Cookie.HttpOnly = true;
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+
+                    options.LoginPath = "/Login";
+                    options.AccessDeniedPath = "/AccessDenied";
+                    options.SlidingExpiration = true;
+                });
             return services;
-		}
-	}
+        }
+    }
 }

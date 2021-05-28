@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using LoginShmogin.Core.Entities;
 using LoginShmogin.Infrastructure.Authentication.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -11,6 +12,12 @@ namespace LoginShmogin.Infrastructure.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
             //dotnet ef -s ../LoginShmogin.Web/
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }
 }
