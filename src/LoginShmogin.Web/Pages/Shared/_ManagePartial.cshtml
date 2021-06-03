@@ -1,0 +1,13 @@
+<ul class="navbar-nav">
+    @if (User.IsInRole("Admin"))
+    {
+        <ul class="navbar-nav flex-grow-1">
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-page="/users/index">Manage users</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-page="/roles/index">Manage roles</a>
+            </li>
+        </ul>
+    }
+</ul>

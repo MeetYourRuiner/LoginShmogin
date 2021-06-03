@@ -8,6 +8,7 @@
         <tr>
             <th>@Html.DisplayNameFor(model => model.Users[0].UserName)</th>
             <th>@Html.DisplayNameFor(model => model.Users[0].Email)</th>
+            <th>@Html.DisplayNameFor(model => model.Users[0].EmailConfirmed)</th>
             <th class="th-fit"></th>
         </tr>
     </thead>
@@ -20,6 +21,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EmailConfirmed)
                 </td>
                 <td>
                     <form asp-page-handler="delete" asp-route-id="@item.Id" method="post">

@@ -17,20 +17,20 @@ namespace LoginShmogin.Web.Pages
         [BindProperty]
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Старый пароль")]
+        [Display(Name = "Old password")]
         public string OldPassword { get; set; }
 
         [BindProperty]
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Новый пароль")]
+        [Display(Name = "New password")]
         public string NewPassword { get; set; }
 
         [BindProperty]
         [Required]
-        [Compare("NewPassword", ErrorMessage = "Пароли не совпадают")]
+        [Compare("NewPassword", ErrorMessage = "The passwords do not match")]
         [DataType(DataType.Password)]
-        [Display(Name = "Подтвердить пароль")]
+        [Display(Name = "Confirm password")]
         public string ConfirmNewPassword { get; set; }
 
         public SettingsModel(UserManager<ApplicationUser> userManager)

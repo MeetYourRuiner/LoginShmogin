@@ -5,6 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using LoginShmogin.Infrastructure.Authentication.Identity;
 using Microsoft.AspNetCore.Identity;
+using LoginShmogin.Core.Interfaces;
+using LoginShmogin.Infrastructure.Services;
+using LoginShmogin.Core.DTOs;
 
 namespace LoginShmogin.Infrastructure
 {
@@ -14,8 +17,11 @@ namespace LoginShmogin.Infrastructure
         {
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
+                
+            EmailSettings emailSettings = configuration.GetSection("EmailSettings").Get<EmailSettings>();    
+            services.AddSingleton<IEmailSender, EmailSender>(s => new EmailSender(emailSettings));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
 

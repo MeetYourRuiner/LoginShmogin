@@ -1,0 +1,14 @@
+﻿@page
+@model LoginShmogin.Web.Pages.AccountRecoveryModel
+@{
+}
+
+<h2>Account recovery</h2>
+<form method="POST">
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email">
+    </div>
+    <input class="btn btn-primary" type="submit" value="Recover"/>
+    <small class="text-success">@Model.Message</small>
+</form>

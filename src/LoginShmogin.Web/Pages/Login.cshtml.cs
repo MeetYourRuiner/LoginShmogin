@@ -25,11 +25,11 @@ namespace LoginShmogin.Web.Pages
         [BindProperty]
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Пароль")]
+        [Display(Name = "Password")]
         public string Password { get; set; }
 
         [BindProperty]
-        [Display(Name = "Запомнить?")]
+        [Display(Name = "Remember me")]
         public bool RememberMe { get; set; }
 
         public string ReturnUrl { get; set; }
