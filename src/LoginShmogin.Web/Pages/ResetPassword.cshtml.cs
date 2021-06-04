@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LoginShmogin.Infrastructure.Authentication.Identity;
+using LoginShmogin.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
@@ -16,10 +12,10 @@ namespace LoginShmogin.Web.Pages
     [AllowAnonymous]
     public class ResetPasswordModel : PageModel
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IIdentityService _identityService;
 
         [BindProperty]
-        public string Code { get; set; }
+        public string Token { get; set; }
         [BindProperty]
         public string UserId { get; set; }
 
@@ -36,9 +32,9 @@ namespace LoginShmogin.Web.Pages
         [Compare("NewPassword", ErrorMessage = "The passwords do not match")]
         public string ConfirmPassword { get; set; }
 
-        public ResetPasswordModel(UserManager<ApplicationUser> userManager)
+        public ResetPasswordModel(IIdentityService identityService)
         {
-            _userManager = userManager;
+            _identityService = identityService;
         }
 
         public IActionResult OnGet(string userId, string code)
@@ -50,7 +46,7 @@ namespace LoginShmogin.Web.Pages
             else
             {
                 UserId = userId;
-                Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+                Token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
                 return Page();
             }
         }
@@ -59,8 +55,7 @@ namespace LoginShmogin.Web.Pages
         {
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByIdAsync(UserId);
-                var result = await _userManager.ResetPasswordAsync(user, Code, NewPassword);
+                var result = await _identityService.ResetPasswordAsync(UserId, Token, NewPassword);
                 if (result.Succeeded)
                     return RedirectToPage("/Login");
                 else

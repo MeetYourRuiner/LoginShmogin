@@ -17,7 +17,7 @@ namespace LoginShmogin.Infrastructure.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.5");
 
-            modelBuilder.Entity("LoginShmogin.Core.Entities.User", b =>
+            modelBuilder.Entity("LoginShmogin.Application.Entities.User", b =>
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()

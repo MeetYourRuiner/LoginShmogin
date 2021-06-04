@@ -3,11 +3,11 @@ using LoginShmogin.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
-using LoginShmogin.Infrastructure.Authentication.Identity;
+using LoginShmogin.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
-using LoginShmogin.Core.Interfaces;
+using LoginShmogin.Application.Interfaces;
 using LoginShmogin.Infrastructure.Services;
-using LoginShmogin.Core.DTOs;
+using LoginShmogin.Application.Models;
 
 namespace LoginShmogin.Infrastructure
 {
@@ -24,7 +24,9 @@ namespace LoginShmogin.Infrastructure
             services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
-
+            services.AddTransient<IIdentityService, IdentityService>();
+            services.AddTransient<ISignInService, SignInService>();
+            
             services.Configure<IdentityOptions>(options =>
             {
                 // Password settings.

@@ -1,16 +1,15 @@
-@using Microsoft.AspNetCore.Identity
-@using LoginShmogin.Infrastructure.Authentication.Identity
-@inject SignInManager<ApplicationUser> SignInManager
-@inject UserManager<ApplicationUser> UserManager
+@using LoginShmogin.Application.Interfaces;
+@inject ISignInService SignInService
 
 <ul class="navbar-nav">
-    @if (SignInManager.IsSignedIn(User))
+    @if (SignInService.IsSignedIn(User))
     {
         <li class="nav-item">
             <a class="nav-link text-dark" asp-page="/Profile/Settings">Hello, @User.Identity.Name!</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-dark"  asp-page="/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })">Logout</a>
+            <a class="nav-link text-dark" asp-page="/Logout"
+            asp-route-returnUrl="@Url.Page("/", new { area = "" })">Logout</a>
         </li>
     }
     else

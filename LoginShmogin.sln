@@ -5,7 +5,7 @@ VisualStudioVersion = 16.6.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7EB27115-BE92-422F-A2CC-A26A3BCDCECB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoginShmogin.Core", "src\LoginShmogin.Core\LoginShmogin.Core.csproj", "{6CF67AEA-5272-4DD9-8E3E-823EE20BDD02}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoginShmogin.Application", "src\LoginShmogin.Application\LoginShmogin.Application.csproj", "{6CF67AEA-5272-4DD9-8E3E-823EE20BDD02}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoginShmogin.Infrastructure", "src\LoginShmogin.Infrastructure\LoginShmogin.Infrastructure.csproj", "{0AED3E3E-F07F-444C-AD8E-E19AA3D86BD3}"
 EndProject

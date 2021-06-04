@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using LoginShmogin.Core.DTOs;
+using LoginShmogin.Application.Models;
 
-namespace LoginShmogin.Core.Interfaces
+namespace LoginShmogin.Application.Interfaces
 {
     public interface IEmailSender
     {

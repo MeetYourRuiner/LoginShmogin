@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using LoginShmogin.Infrastructure.Authentication.Identity;
+using LoginShmogin.Application.Interfaces;
+using LoginShmogin.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -12,7 +13,7 @@ namespace LoginShmogin.Web.Pages
 {
     public class SettingsModel : PageModel
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IIdentityService _identityService;
 
         [BindProperty]
         [Required]
@@ -33,17 +34,17 @@ namespace LoginShmogin.Web.Pages
         [Display(Name = "Confirm password")]
         public string ConfirmNewPassword { get; set; }
 
-        public SettingsModel(UserManager<ApplicationUser> userManager)
+        public SettingsModel(IIdentityService identityService)
         {
-            _userManager = userManager;
+            _identityService = identityService;
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
             if (ModelState.IsValid)
             {
-                ApplicationUser user = await _userManager.FindByIdAsync(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
-                var result = await _userManager.ChangePasswordAsync(user, OldPassword, NewPassword);
+                string userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value;
+                var result = await _identityService.ChangePasswordAsync(userId, OldPassword, NewPassword);
                 if (result.Succeeded)
                 {
                     return Page();
@@ -52,7 +53,7 @@ namespace LoginShmogin.Web.Pages
                 {
                     foreach (var error in result.Errors)
                     {
-                        ModelState.AddModelError(string.Empty, error.Description);
+                        ModelState.AddModelError(string.Empty, error);
                     }
                 }
             }

@@ -1,15 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using LoginShmogin.Core.DTOs;
-using LoginShmogin.Core.Interfaces;
-using LoginShmogin.Infrastructure.Authentication.Identity;
+using LoginShmogin.Application.Models;
+using LoginShmogin.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
@@ -19,14 +14,14 @@ namespace LoginShmogin.Web.Pages
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IIdentityService _identityService;
+        private readonly ISignInService _signInService;
         private readonly IEmailSender _emailSender;
 
-        public RegisterModel(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender)
+        public RegisterModel(IIdentityService identityService, ISignInService signInService, IEmailSender emailSender)
         {
-            _signInManager = signInManager;
-            _userManager = userManager;
+            _signInService = signInService;
+            _identityService = identityService;
             _emailSender = emailSender;
         }
 
@@ -54,44 +49,31 @@ namespace LoginShmogin.Web.Pages
             returnUrl ??= Url.Content("~/");
             if (ModelState.IsValid)
             {
-                ApplicationUser newUser = new ApplicationUser
-                {
-                    Email = Email,
-                    UserName = Email
-                };
-                var result = await _userManager.CreateAsync(newUser, Password);
+                var result = await _identityService.CreateUserAsync(Email, Password);
                 if (result.Succeeded)
                 {
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                    var emailParams = await _identityService.GenerateEmailConfirmationTokenAsync(Email);
+                    var code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(emailParams.token));
                     var callbackUrl = Url.Page(
                         "/ConfirmEmail",
                         pageHandler: null,
-                        values: new { userId = newUser.Id, code = code, returnUrl = returnUrl },
+                        values: new { userId = emailParams.userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
-                    
+
                     var emailRequest = new EmailRequest(
-                        Email, 
-                        "Confirm your email", 
+                        Email,
+                        "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>."
                     );
                     await _emailSender.SendEmailAsync(emailRequest);
 
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                    {
-                        return RedirectToPage("RegisterConfirmation", new { email = Email, returnUrl = returnUrl });
-                    }
-                    else
-                    {
-                        await _signInManager.SignInAsync(newUser, false);
-                        return LocalRedirect(returnUrl);
-                    }
+                    return RedirectToPage("RegisterConfirmation", new { email = Email, returnUrl = returnUrl });
                 }
                 else
                 {
                     foreach (var error in result.Errors)
                     {
-                        ModelState.AddModelError(string.Empty, error.Description);
+                        ModelState.AddModelError(string.Empty, error);
                     }
                 }
             }

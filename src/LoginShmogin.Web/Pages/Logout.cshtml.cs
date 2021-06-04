@@ -1,6 +1,5 @@
-using LoginShmogin.Infrastructure.Authentication.Identity;
+using LoginShmogin.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
@@ -11,18 +10,18 @@ namespace LoginShmogin.Web.Pages
     [AllowAnonymous]
     public class LogoutModel : PageModel
     {
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ISignInService _signInService;
         private readonly ILogger<LogoutModel> _logger;
 
-        public LogoutModel(SignInManager<ApplicationUser> signInManager, ILogger<LogoutModel> logger)
+        public LogoutModel(ISignInService signInService, ILogger<LogoutModel> logger)
         {
-            _signInManager = signInManager;
+            _signInService = signInService;
             _logger = logger;
         }
 
         public async Task<IActionResult> OnGetAsync(string returnUrl = null)
         {
-            await _signInManager.SignOutAsync();
+            await _signInService.SignOutAsync();
             _logger.LogInformation("User logged out.");
             if (returnUrl != null)
             {

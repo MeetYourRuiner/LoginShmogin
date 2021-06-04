@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\LoginShmogin.Core\LoginShmogin.Core.csproj" />
+    <ProjectReference Include="..\LoginShmogin.Application\LoginShmogin.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,10 +1,8 @@
-using System;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using LoginShmogin.Core.DTOs;
-using LoginShmogin.Core.Interfaces;
-using Microsoft.Extensions.Configuration;
+using LoginShmogin.Application.Models;
+using LoginShmogin.Application.Interfaces;
 
 namespace LoginShmogin.Infrastructure.Services
 {

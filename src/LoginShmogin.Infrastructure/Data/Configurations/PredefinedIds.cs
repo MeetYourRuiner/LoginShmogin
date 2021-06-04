@@ -1,5 +1,3 @@
-using System;
-
 namespace LoginShmogin.Infrastructure.Data.Configurations
 {
     public static class PredefinedIds

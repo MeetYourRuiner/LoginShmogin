@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LoginShmogin.Infrastructure.Authentication.Identity;
+using LoginShmogin.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
@@ -15,11 +11,11 @@ namespace LoginShmogin.Web.Pages
     [AllowAnonymous]
     public class ConfirmEmailModel : PageModel
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IIdentityService _identityService;
 
-        public ConfirmEmailModel(UserManager<ApplicationUser> userManager)
+        public ConfirmEmailModel(IIdentityService identityService)
         {
-            _userManager = userManager;
+            _identityService = identityService;
         }
 
         [TempData]
@@ -31,19 +27,13 @@ namespace LoginShmogin.Web.Pages
             {
                 return RedirectToPage("/Index");
             }
-
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-            {
-                return NotFound($"Unable to load user with ID '{userId}'.");
-            }
-
+            
             code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
-            var result = await _userManager.ConfirmEmailAsync(user, code);
+            var result = await _identityService.ConfirmEmailAsync(userId, code);
             if (result.Succeeded)
             {
                 StatusMessage = "Thank you for confirming your email.";
-                await _userManager.AddToRoleAsync(user, "User");
+                await _identityService.AddToRoleAsync(userId, "User");
             }
             else
             {

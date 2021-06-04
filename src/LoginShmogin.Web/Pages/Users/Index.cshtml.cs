@@ -1,26 +1,24 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using LoginShmogin.Infrastructure.Authentication.Identity;
+using LoginShmogin.Infrastructure.Identity;
 using LoginShmogin.Infrastructure.Data;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using LoginShmogin.Application.Interfaces;
 
 namespace LoginShmogin.Web.Pages
 {
     public class UsersModel : PageModel
     {
         private readonly AppDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IIdentityService _identityService;
         
         public IList<ApplicationUser> Users { get; set; }
 
-        public UsersModel(AppDbContext context, UserManager<ApplicationUser> userManager)
+        public UsersModel(AppDbContext context, IIdentityService identityService)
         {
-            _userManager = userManager;
+            _identityService = identityService;
             _context = context;
 
         }
@@ -31,11 +29,7 @@ namespace LoginShmogin.Web.Pages
 
         public async Task<ActionResult> OnPostDeleteAsync(string id)
         {
-            ApplicationUser user = await _userManager.FindByIdAsync(id);
-            if (user != null)
-            {
-                IdentityResult result = await _userManager.DeleteAsync(user);
-            }
+            await _identityService.DeleteUserAsync(id);
             return RedirectToPage();
         }
     }

@@ -1,15 +1,12 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
-using LoginShmogin.Core.DTOs;
-using LoginShmogin.Core.Interfaces;
-using LoginShmogin.Infrastructure.Authentication.Identity;
+using LoginShmogin.Application.Models;
+using LoginShmogin.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
 
 namespace LoginShmogin.Web.Pages
 {
@@ -17,7 +14,7 @@ namespace LoginShmogin.Web.Pages
     public class AccountRecoveryModel : PageModel
     {
         private readonly IEmailSender _emailSender;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IIdentityService _identityService;
 
         [ViewData]
         public string Message { get; set; }
@@ -28,9 +25,9 @@ namespace LoginShmogin.Web.Pages
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        public AccountRecoveryModel(UserManager<ApplicationUser> userManager, IEmailSender emailSender)
+        public AccountRecoveryModel(IIdentityService identityService, IEmailSender emailSender)
         {
-            _userManager = userManager;
+            _identityService = identityService;
             _emailSender = emailSender;
         }
 
@@ -38,24 +35,21 @@ namespace LoginShmogin.Web.Pages
         {
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByEmailAsync(Email);
-                if (user != null)
-                {
-                    var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                    var callbackUrl = Url.Page(
-                        "ResetPassword",
-                        pageHandler: null,
-                        new { userId = user.Id, code = code },
-                        protocol: Request.Scheme
-                    );
-                    var emailRequest = new EmailRequest(
-                        Email,
-                        "Account Recovery",
-                        $"To recovery password click <a href='{callbackUrl}'>the link</a>"
-                    );
+                var emailParams = await _identityService.GeneratePasswordResetTokenAsync(Email);
+                var code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(emailParams.token));
+                var callbackUrl = Url.Page(
+                    "ResetPassword",
+                    pageHandler: null,
+                    new { userId = emailParams.userId, code = code },
+                    protocol: Request.Scheme
+                );
+                var emailRequest = new EmailRequest(
+                    Email,
+                    "Account Recovery",
+                    $"To recovery password click <a href='{callbackUrl}'>the link</a>"
+                );
 
-                    await _emailSender.SendEmailAsync(emailRequest);
-                }
+                await _emailSender.SendEmailAsync(emailRequest);
                 Message = "Recovery message was sent.";
             }
             return Page();

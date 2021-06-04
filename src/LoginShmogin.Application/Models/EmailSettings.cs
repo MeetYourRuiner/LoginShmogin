@@ -1,6 +1,4 @@
-using System;
-
-namespace LoginShmogin.Core.DTOs
+namespace LoginShmogin.Application.Models
 {
     public class EmailSettings
     {

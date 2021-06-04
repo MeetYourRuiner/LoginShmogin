@@ -1,7 +1,5 @@
-using System;
 using System.Reflection;
-using LoginShmogin.Core.Entities;
-using LoginShmogin.Infrastructure.Authentication.Identity;
+using LoginShmogin.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
