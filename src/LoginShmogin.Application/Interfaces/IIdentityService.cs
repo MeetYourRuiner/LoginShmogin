@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using LoginShmogin.Application.DTOs;
 using LoginShmogin.Application.Models;
 
 namespace LoginShmogin.Application.Interfaces
@@ -15,5 +17,6 @@ namespace LoginShmogin.Application.Interfaces
         Task<Result> ChangePasswordAsync(string userId, string oldPassword, string newPassword);
         Task<(string userId, string token)> GenerateEmailConfirmationTokenAsync(string email);
         Task<(string userId, string token)> GeneratePasswordResetTokenAsync(string email);
+        Task<IList<UserDTO>> GetUsersAsync();
     }
 }

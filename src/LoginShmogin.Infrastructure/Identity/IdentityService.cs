@@ -1,7 +1,11 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using LoginShmogin.Application.DTOs;
 using LoginShmogin.Application.Interfaces;
 using LoginShmogin.Application.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace LoginShmogin.Infrastructure.Identity
 {
@@ -79,6 +83,15 @@ namespace LoginShmogin.Infrastructure.Identity
             ApplicationUser user = await _userManager.FindByEmailAsync(email);
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             return (user.Id, token);
+        }
+
+        public async Task<IList<UserDTO>> GetUsersAsync()
+        {
+            var users = await _userManager.Users
+                .AsNoTracking()
+                .Select((u) => new UserDTO(u.Id, u.UserName, u.Email, u.EmailConfirmed))
+                .ToListAsync();
+            return users;
         }
     }
 }

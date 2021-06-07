@@ -26,6 +26,7 @@ namespace LoginShmogin.Infrastructure
                 .AddDefaultTokenProviders();
             services.AddTransient<IIdentityService, IdentityService>();
             services.AddTransient<ISignInService, SignInService>();
+            services.AddTransient<IRoleService, RoleService>();
             
             services.Configure<IdentityOptions>(options =>
             {

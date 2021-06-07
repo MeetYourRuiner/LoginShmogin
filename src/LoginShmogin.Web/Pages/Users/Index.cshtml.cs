@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using LoginShmogin.Infrastructure.Identity;
 using LoginShmogin.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using LoginShmogin.Application.Interfaces;
+using LoginShmogin.Application.DTOs;
 
 namespace LoginShmogin.Web.Pages
 {
@@ -14,7 +13,7 @@ namespace LoginShmogin.Web.Pages
         private readonly AppDbContext _context;
         private readonly IIdentityService _identityService;
         
-        public IList<ApplicationUser> Users { get; set; }
+        public IList<UserDTO> Users { get; set; }
 
         public UsersModel(AppDbContext context, IIdentityService identityService)
         {
@@ -24,7 +23,7 @@ namespace LoginShmogin.Web.Pages
         }
         public async Task OnGetAsync()
         {
-            Users = await _context.Users.AsNoTracking().ToListAsync();
+            Users = await _identityService.GetUsersAsync();
         }
 
         public async Task<ActionResult> OnPostDeleteAsync(string id)

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+using LoginShmogin.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -8,21 +8,21 @@ namespace LoginShmogin.Web.Pages
 {
     public class CreateModel : PageModel
     {
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IRoleService _roleService;
 
         [BindProperty]
         [Required]
         public string Name { get; set; }
-        public CreateModel(RoleManager<IdentityRole> roleManager)
+        public CreateModel(IRoleService roleService)
         {
-            _roleManager = roleManager;
+            _roleService = roleService;
         }
 
         public async Task<ActionResult> OnPostAsync()
         {
             if (ModelState.IsValid)
             {
-                var result = await _roleManager.CreateAsync(new IdentityRole(Name));
+                var result = await _roleService.CreateRoleAsync(Name);
                 if (result.Succeeded)
                 {
                     return RedirectToPage("./Index");
