@@ -10,19 +10,25 @@ namespace LoginShmogin.Web.Pages
     {
         private readonly IRoleService _roleService;
 
-        [BindProperty]
-        [Required]
-        public string Name { get; set; }
         public CreateModel(IRoleService roleService)
         {
             _roleService = roleService;
+        }
+
+        [BindProperty]
+        public InputModel Input { get; set; }
+
+        public class InputModel
+        {
+            [Required]
+            public string Name { get; set; }
         }
 
         public async Task<ActionResult> OnPostAsync()
         {
             if (ModelState.IsValid)
             {
-                var result = await _roleService.CreateRoleAsync(Name);
+                var result = await _roleService.CreateRoleAsync(Input.Name);
                 if (result.Succeeded)
                 {
                     return RedirectToPage("./Index");

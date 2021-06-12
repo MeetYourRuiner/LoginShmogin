@@ -25,34 +25,49 @@ namespace LoginShmogin.Web.Pages
             _emailSender = emailSender;
         }
 
-        [BindProperty]
-        [Required]
-        [DataType(DataType.EmailAddress)]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
+        public IActionResult OnGet()
+        {
+            if (_signInService.IsSignedIn(User))
+            {
+                return RedirectToPage("/Index");
+            }
+            else
+            {
+                return Page();
+            }
+        }
 
         [BindProperty]
-        [Required]
-        [DataType(DataType.Password)]
-        [Display(Name = "Password")]
-        public string Password { get; set; }
+        public InputModel Input { get; set; }
 
-        [BindProperty]
-        [Required]
-        [Compare("Password", ErrorMessage = "The passwords do not match")]
-        [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        public string PasswordConfirm { get; set; }
+        public class InputModel
+        {
+            [Required]
+            [DataType(DataType.EmailAddress)]
+            [Display(Name = "Email")]
+            public string Email { get; set; }
+
+            [Required]
+            [DataType(DataType.Password)]
+            [Display(Name = "Password")]
+            public string Password { get; set; }
+
+            [Required]
+            [Compare("Password", ErrorMessage = "The passwords do not match")]
+            [DataType(DataType.Password)]
+            [Display(Name = "Confirm password")]
+            public string PasswordConfirm { get; set; }
+        }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
             if (ModelState.IsValid)
             {
-                var result = await _identityService.CreateUserAsync(Email, Password);
+                (_, var result) = await _identityService.CreateUserAsync(Input.Email, Input.Password);
                 if (result.Succeeded)
                 {
-                    var emailParams = await _identityService.GenerateEmailConfirmationTokenAsync(Email);
+                    var emailParams = await _identityService.GenerateEmailConfirmationTokenAsync(Input.Email);
                     var code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(emailParams.token));
                     var callbackUrl = Url.Page(
                         "/ConfirmEmail",
@@ -61,13 +76,13 @@ namespace LoginShmogin.Web.Pages
                         protocol: Request.Scheme);
 
                     var emailRequest = new EmailRequest(
-                        Email,
+                        Input.Email,
                         "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>."
                     );
                     await _emailSender.SendEmailAsync(emailRequest);
 
-                    return RedirectToPage("RegisterConfirmation", new { email = Email, returnUrl = returnUrl });
+                    return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
                 }
                 else
                 {

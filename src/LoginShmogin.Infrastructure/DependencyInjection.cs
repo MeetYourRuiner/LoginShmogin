@@ -17,8 +17,8 @@ namespace LoginShmogin.Infrastructure
         {
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
-                
-            EmailSettings emailSettings = configuration.GetSection("EmailSettings").Get<EmailSettings>();    
+
+            EmailSettings emailSettings = configuration.GetSection("EmailSettings").Get<EmailSettings>();
             services.AddSingleton<IEmailSender, EmailSender>(s => new EmailSender(emailSettings));
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -27,7 +27,8 @@ namespace LoginShmogin.Infrastructure
             services.AddTransient<IIdentityService, IdentityService>();
             services.AddTransient<ISignInService, SignInService>();
             services.AddTransient<IRoleService, RoleService>();
-            
+            services.AddTransient<IExternalLoginService, ExternalLoginService>();
+
             services.Configure<IdentityOptions>(options =>
             {
                 // Password settings.
@@ -57,6 +58,15 @@ namespace LoginShmogin.Infrastructure
                     options.LoginPath = "/Login";
                     options.AccessDeniedPath = "/AccessDenied";
                     options.SlidingExpiration = true;
+                });
+            services.AddAuthentication()
+                .AddGoogle(options =>
+                {
+                    GoogleSettings googleSettings =
+                        configuration.GetSection("GoogleSettings").Get<GoogleSettings>();
+
+                    options.ClientId = googleSettings.ClientId;
+                    options.ClientSecret = googleSettings.ClientSecret;
                 });
             return services;
         }

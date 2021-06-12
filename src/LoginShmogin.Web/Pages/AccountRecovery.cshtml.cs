@@ -16,26 +16,31 @@ namespace LoginShmogin.Web.Pages
         private readonly IEmailSender _emailSender;
         private readonly IIdentityService _identityService;
 
-        [ViewData]
-        public string Message { get; set; }
-
-        [BindProperty]
-        [Required]
-        [DataType(DataType.EmailAddress)]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
-
         public AccountRecoveryModel(IIdentityService identityService, IEmailSender emailSender)
         {
             _identityService = identityService;
             _emailSender = emailSender;
         }
 
+        [ViewData]
+        public string Message { get; set; }
+
+        [BindProperty]
+        public InputModel Input { get; set; }
+
+        public class InputModel
+        {
+            [Required]
+            [DataType(DataType.EmailAddress)]
+            [Display(Name = "Email")]
+            public string Email { get; set; }
+        }
+
         public async Task<IActionResult> OnPostAsync()
         {
             if (ModelState.IsValid)
             {
-                var emailParams = await _identityService.GeneratePasswordResetTokenAsync(Email);
+                var emailParams = await _identityService.GeneratePasswordResetTokenAsync(Input.Email);
                 var code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(emailParams.token));
                 var callbackUrl = Url.Page(
                     "ResetPassword",
@@ -44,7 +49,7 @@ namespace LoginShmogin.Web.Pages
                     protocol: Request.Scheme
                 );
                 var emailRequest = new EmailRequest(
-                    Email,
+                    Input.Email,
                     "Account Recovery",
                     $"To recovery password click <a href='{callbackUrl}'>the link</a>"
                 );

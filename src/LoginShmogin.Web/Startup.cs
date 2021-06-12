@@ -29,7 +29,7 @@ namespace LoginShmogin.Web
                     options.Conventions.AuthorizeFolder("/Users", "RequireAdministratorRole");
                     options.Conventions.AuthorizeFolder("/Roles", "RequireAdministratorRole");
                 }
-            );
+            ).AddRazorRuntimeCompilation();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

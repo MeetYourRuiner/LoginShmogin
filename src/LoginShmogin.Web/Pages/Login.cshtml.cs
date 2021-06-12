@@ -13,27 +13,43 @@ namespace LoginShmogin.Web.Pages
         private readonly ISignInService _signInService;
         private readonly IIdentityService _identityService;
 
-        [BindProperty]
-        [Required]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
-
-        [BindProperty]
-        [Required]
-        [DataType(DataType.Password)]
-        [Display(Name = "Password")]
-        public string Password { get; set; }
-
-        [BindProperty]
-        [Display(Name = "Remember me")]
-        public bool RememberMe { get; set; }
-
-        public string ReturnUrl { get; set; }
 
         public LoginModel(IIdentityService identityService, ISignInService signInService)
         {
             _identityService = identityService;
             _signInService = signInService;
+        }
+
+        public string ReturnUrl { get; set; }
+
+        [BindProperty]
+        public InputModel Input { get; set; }
+
+        public class InputModel
+        {
+            [Required]
+            [Display(Name = "Email")]
+            public string Email { get; set; }
+
+            [Required]
+            [DataType(DataType.Password)]
+            [Display(Name = "Password")]
+            public string Password { get; set; }
+
+            [Display(Name = "Remember me")]
+            public bool RememberMe { get; set; }
+        }
+
+        public IActionResult OnGet()
+        {
+            if (_signInService.IsSignedIn(User))
+            {
+                return RedirectToPage("/Index");
+            }
+            else
+            {
+                return Page();
+            }
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -45,24 +61,12 @@ namespace LoginShmogin.Web.Pages
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, 
                 // set lockoutOnFailure: true
-                var result = await _signInService.SignInAsync(Email,
-                                   Password, RememberMe);
+                var result = await _signInService.SignInAsync(Input.Email,
+                                   Input.Password, Input.RememberMe);
                 if (result.Succeeded)
                 {
                     return LocalRedirect(returnUrl);
                 }
-                // if (result.RequiresTwoFactor)
-                // {
-                //     return RedirectToPage("./LoginWith2fa", new
-                //     {
-                //         ReturnUrl = returnUrl,
-                //         RememberMe = RememberMe
-                //     });
-                // }
-                // if (result.IsLockedOut)
-                // {
-                //     return RedirectToPage("./Lockout");
-                // }
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");

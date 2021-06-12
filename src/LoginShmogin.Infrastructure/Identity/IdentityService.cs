@@ -21,7 +21,7 @@ namespace LoginShmogin.Infrastructure.Identity
         {
             ApplicationUser user = await _userManager.FindByIdAsync(userId);
             if (user == null)
-                return Result.Failure(new string[] {$"Unable to load user with ID '{userId}'." });
+                return Result.Failure(new string[] { $"Unable to load user with ID '{userId}'." });
             var result = await _userManager.AddToRoleAsync(user, "User");
             return result.ToApplicationResult();
         }
@@ -40,15 +40,21 @@ namespace LoginShmogin.Infrastructure.Identity
             return result.ToApplicationResult();
         }
 
-        public async Task<Result> CreateUserAsync(string email, string password)
+        public async Task<(string userId, Result result)> CreateUserAsync(string email, string password)
         {
             ApplicationUser newUser = new ApplicationUser
             {
                 Email = email,
                 UserName = email
             };
+            string userId = string.Empty;
             var result = await _userManager.CreateAsync(newUser, password);
-            return result.ToApplicationResult();
+            if (result.Succeeded)
+            {
+                var user = await _userManager.FindByEmailAsync(email);
+                userId = user?.Id;
+            }
+            return (userId, result.ToApplicationResult());
         }
 
         public async Task<Result> DeleteUserAsync(string userId)

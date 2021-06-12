@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace LoginShmogin.Web.Pages
 {
-    [AllowAnonymous]
     public class LogoutModel : PageModel
     {
         private readonly ISignInService _signInService;
