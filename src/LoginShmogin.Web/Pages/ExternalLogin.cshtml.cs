@@ -41,7 +41,7 @@ namespace LoginShmogin.Web.Pages
 
         public string ReturnUrl { get; set; }
 
-        [TempData]
+        [ViewData]
         public string ErrorMessage { get; set; }
 
         public class InputModel
@@ -83,7 +83,7 @@ namespace LoginShmogin.Web.Pages
                 ErrorMessage = $"Error from external provider: {remoteError}";
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
-            var info = await _externalLoginService.GetExternalServiceInfoAsync();
+            var info = await _externalLoginService.GetCurrentLoginContextAsync();
             if (info == null)
             {
                 ErrorMessage = "Error loading external login information during confirmation.";
@@ -116,7 +116,7 @@ namespace LoginShmogin.Web.Pages
         {
             returnUrl = returnUrl ?? Url.Content("~/");
             // Get the information about the user from the external login provider
-            var info = await _externalLoginService.GetExternalServiceInfoAsync();
+            var info = await _externalLoginService.GetCurrentLoginContextAsync();
             if (info == null)
             {
                 ErrorMessage = "Error loading external login information during confirmation.";
@@ -128,7 +128,7 @@ namespace LoginShmogin.Web.Pages
                 (string userId, var result) = await _identityService.CreateUserAsync(Input.Email, Input.Password);
                 if (result.Succeeded)
                 {
-                    result = await _externalLoginService.AddExternalLoginAsync(userId);
+                    result = await _externalLoginService.AddLoginAsync(userId);
                     if (result.Succeeded)
                     {
                         _logger.LogInformation("User created an account using {Name} provider.", info.ProviderName);

@@ -4,19 +4,24 @@ using LoginShmogin.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace LoginShmogin.Web.Pages
+namespace LoginShmogin.Web.Areas.Profile.Pages
 {
-    public class SettingsModel : PageModel
+    public class ChangePasswordModel : PageModel
     {
         private readonly IIdentityService _identityService;
+        private readonly ICurrentUserService _currentUserService;
 
-        public SettingsModel(IIdentityService identityService)
+        public ChangePasswordModel(IIdentityService identityService, ICurrentUserService currentUserService)
         {
+            _currentUserService = currentUserService;
             _identityService = identityService;
         }
 
         [BindProperty]
         public InputModel Input { get; set; }
+
+        [TempData]
+        public string StatusMessage { get; set; }
 
         public class InputModel
         {
@@ -41,10 +46,11 @@ namespace LoginShmogin.Web.Pages
         {
             if (ModelState.IsValid)
             {
-                string userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value;
+                string userId = _currentUserService.UserId;
                 var result = await _identityService.ChangePasswordAsync(userId, Input.OldPassword, Input.NewPassword);
                 if (result.Succeeded)
                 {
+                    StatusMessage = "Your password was successfully changed";
                     return Page();
                 }
                 else

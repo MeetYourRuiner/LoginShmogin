@@ -18,7 +18,7 @@ namespace LoginShmogin.Web.Pages
             _identityService = identityService;
         }
 
-        [TempData]
+        [ViewData]
         public string StatusMessage { get; set; }
 
         public async Task<IActionResult> OnGetAsync(string userId, string code)
@@ -27,7 +27,7 @@ namespace LoginShmogin.Web.Pages
             {
                 return RedirectToPage("/Index");
             }
-            
+
             code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
             var result = await _identityService.ConfirmEmailAsync(userId, code);
             if (result.Succeeded)

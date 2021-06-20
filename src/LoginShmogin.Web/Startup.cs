@@ -1,4 +1,6 @@
+using LoginShmogin.Application.Interfaces;
 using LoginShmogin.Infrastructure;
+using LoginShmogin.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +20,9 @@ namespace LoginShmogin.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddInfrastructure(Configuration);
+            services.AddSingleton<ICurrentUserService, CurrentUserService>();
+            services.AddHttpContextAccessor();
+
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("RequireAdministratorRole",

@@ -1,12 +1,5 @@
 ﻿@{
-    if (ViewData.TryGetValue("ParentLayout", out var parentLayout))
-    {
-        Layout = (string)parentLayout;
-    }
-    else
-    {
-        Layout = "/Pages/Profile/_Layout.cshtml";
-    }
+    Layout = "_MasterLayout";
 }
 
 <h2>Manage your account</h2>

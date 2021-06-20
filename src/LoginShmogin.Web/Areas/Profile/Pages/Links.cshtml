@@ -1,0 +1,37 @@
+﻿@page
+@using LoginShmogin.Web.Areas.Profile.Pages
+@model LoginShmogin.Web.Areas.Profile.Pages.LinksModel
+@{
+    ViewData["ActivePage"] = ManageNavPages.Links;
+}
+
+<div>
+    <partial name="_StatusMessagePartial" for="StatusMessage" />
+    <ul class="list-group">
+        @foreach (var link in Model.LinksStatus)
+        {
+            <li class="list-group-item">
+                @if (link.Value)
+                {
+                    <form class="form-inline" asp-page-handler="RemoveLink" method="post" asp-route-provider="@link.Key">
+                        <span>@link.Key is connected</span>
+                        <button class="btn btn-danger ml-auto">Disconnect</button>
+                    </form>
+                }
+                else
+                {
+                    <form class="form-inline" asp-page-handler="AddLink" method="post" asp-route-provider="@link.Key">
+                        <span>@link.Key is not connected</span>
+                        <button class="btn btn-primary ml-auto">Connect</button>
+                    </form>
+                }
+            </li>
+            <li class="list-group-item">
+                <form class="form-inline">
+                    <span>Kek is connected</span>
+                    <button class="btn btn-danger ml-auto">Disconnect</button>
+                </form>
+            </li>
+        }
+    </ul>
+</div>
