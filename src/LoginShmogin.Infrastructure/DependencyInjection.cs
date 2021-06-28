@@ -28,6 +28,7 @@ namespace LoginShmogin.Infrastructure
             services.AddTransient<ISignInService, SignInService>();
             services.AddTransient<IRoleService, RoleService>();
             services.AddTransient<IExternalLoginService, ExternalLoginService>();
+            services.AddTransient<IAuthenticatorService, AuthenticatorService>();
 
             services.Configure<IdentityOptions>(options =>
             {

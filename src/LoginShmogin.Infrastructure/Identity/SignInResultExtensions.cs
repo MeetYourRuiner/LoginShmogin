@@ -8,9 +8,22 @@ namespace LoginShmogin.Infrastructure.Identity
     {
         public static Result ToApplicationResult(this SignInResult result)
         {
-            return result.Succeeded
-                ? Result.Success()
-                : Result.Failure(new string[] {"Sign in failed"});
+            if (result.Succeeded)
+            {
+                return Result.Success();
+            }
+            else if (result.RequiresTwoFactor)
+            {
+                return Result.TwoFactorRequired();
+            }
+            else if (result.IsLockedOut)
+            {
+                return Result.LockedOut();
+            }
+            else
+            {
+                return Result.Failure(new string[] { "Sign in failed" });
+            }
         }
     }
 }

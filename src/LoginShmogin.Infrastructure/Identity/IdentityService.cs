@@ -99,5 +99,17 @@ namespace LoginShmogin.Infrastructure.Identity
                 .ToListAsync();
             return users;
         }
+
+        public async Task<UserDTO> GetUserById(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            return new UserDTO(user.Id, user.UserName, user.Email, user.EmailConfirmed);
+        }
+
+        public async Task<UserDTO> GetUserByEmail(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            return new UserDTO(user.Id, user.UserName, user.Email, user.EmailConfirmed);
+        }
     }
 }

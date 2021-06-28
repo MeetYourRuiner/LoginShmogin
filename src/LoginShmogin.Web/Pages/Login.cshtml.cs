@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using LoginShmogin.Application.Interfaces;
+using LoginShmogin.Application.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -58,14 +59,15 @@ namespace LoginShmogin.Web.Pages
 
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, 
-                // set lockoutOnFailure: true
                 var result = await _signInService.SignInAsync(Input.Email,
                                    Input.Password, Input.RememberMe);
                 if (result.Succeeded)
                 {
                     return LocalRedirect(returnUrl);
+                }
+                else if (result.Is2FARequired)
+                {
+                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
                 }
                 else
                 {

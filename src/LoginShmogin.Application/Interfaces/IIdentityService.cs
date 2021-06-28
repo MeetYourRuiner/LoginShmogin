@@ -8,6 +8,8 @@ namespace LoginShmogin.Application.Interfaces
 {
     public interface IIdentityService
     {
+        Task<UserDTO> GetUserById(string userId);
+        Task<UserDTO> GetUserByEmail(string email);
         Task<(string userId, Result result)> CreateUserAsync(string email, string password);
         Task<Result> DeleteUserAsync(string userId);
         Task<bool> IsInRoleAsync(string userId, string role);
