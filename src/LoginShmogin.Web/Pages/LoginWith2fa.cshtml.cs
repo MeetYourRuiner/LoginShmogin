@@ -28,6 +28,8 @@ namespace LoginShmogin.Web.Pages
 
         public bool RememberMe { get; set; }
 
+        public string Email { get; set; }
+
         public string ReturnUrl { get; set; }
 
         public class InputModel
@@ -42,7 +44,7 @@ namespace LoginShmogin.Web.Pages
             public bool RememberMachine { get; set; }
         }
 
-        public async Task<IActionResult> OnGetAsync(bool rememberMe, string returnUrl = null)
+        public async Task<IActionResult> OnGetAsync(bool rememberMe, string email, string returnUrl = null)
         {
             // Ensure the user has gone through the username & password screen first
             var userId = await _authenticatorService.GetAuthenticationUserId();
@@ -54,6 +56,7 @@ namespace LoginShmogin.Web.Pages
 
             ReturnUrl = returnUrl;
             RememberMe = rememberMe;
+            Email = email;
 
             return Page();
         }

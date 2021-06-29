@@ -20,5 +20,7 @@ namespace LoginShmogin.Application.Interfaces
         Task<(string userId, string token)> GenerateEmailConfirmationTokenAsync(string email);
         Task<(string userId, string token)> GeneratePasswordResetTokenAsync(string email);
         Task<IList<UserDTO>> GetUsersAsync();
+        Task<(string userId, string token)> GenerateAuthenticatorResetTokenAsync(string email);
+        Task<Result> ResetAuthenticatorAsync(string userId, string token);
     }
 }

@@ -23,7 +23,8 @@ namespace LoginShmogin.Infrastructure
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<AppDbContext>()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders()
+                .AddTokenProvider<DataProtectorTokenProvider<ApplicationUser>>(CustomTokenProviders.ResetAuthenticatorProvider);
             services.AddTransient<IIdentityService, IdentityService>();
             services.AddTransient<ISignInService, SignInService>();
             services.AddTransient<IRoleService, RoleService>();

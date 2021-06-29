@@ -67,7 +67,7 @@ namespace LoginShmogin.Web.Pages
                 }
                 else if (result.Is2FARequired)
                 {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe, Email = Input.Email });
                 }
                 else
                 {

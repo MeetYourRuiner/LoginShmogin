@@ -1,0 +1,15 @@
+@page
+@model LoginShmogin.Web.Pages.AuthenticatorRecoveryModel
+@{
+    ViewData["Title"] = "Authenticator recovery";
+}
+
+<h1>@ViewData["Title"]</h1>
+@{
+    <p>Are you sure you want to disable 2FA?</p>
+    <form method="post">
+        <small class="text-success">@Model.Message</small>
+        <button type="submit" class="btn btn-primary">Confirm</button>
+        <input asp-for="Input.Email" type="hidden" />
+    </form>
+}
