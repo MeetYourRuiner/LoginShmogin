@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using LoginShmogin.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
 
 namespace LoginShmogin.Web.Areas.Profile.Pages
 {
@@ -10,9 +11,11 @@ namespace LoginShmogin.Web.Areas.Profile.Pages
     {
         private readonly IIdentityService _identityService;
         private readonly ICurrentUserService _currentUserService;
+        private readonly ILogger<ChangePasswordModel> _logger;
 
-        public ChangePasswordModel(IIdentityService identityService, ICurrentUserService currentUserService)
+        public ChangePasswordModel(IIdentityService identityService, ICurrentUserService currentUserService, ILogger<ChangePasswordModel> logger)
         {
+            _logger = logger;
             _currentUserService = currentUserService;
             _identityService = identityService;
         }
@@ -50,6 +53,7 @@ namespace LoginShmogin.Web.Areas.Profile.Pages
                 var result = await _identityService.ChangePasswordAsync(userId, Input.OldPassword, Input.NewPassword);
                 if (result.Succeeded)
                 {
+                    _logger.LogInformation("User with ID '{UserId}' has changed password.", userId);
                     StatusMessage = "Your password was successfully changed";
                     return Page();
                 }

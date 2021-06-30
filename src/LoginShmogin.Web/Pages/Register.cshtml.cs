@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
 
 namespace LoginShmogin.Web.Pages
 {
@@ -17,9 +18,11 @@ namespace LoginShmogin.Web.Pages
         private readonly IIdentityService _identityService;
         private readonly ISignInService _signInService;
         private readonly IEmailSender _emailSender;
+        private readonly ILogger<RegisterModel> _logger;
 
-        public RegisterModel(IIdentityService identityService, ISignInService signInService, IEmailSender emailSender)
+        public RegisterModel(IIdentityService identityService, ISignInService signInService, IEmailSender emailSender, ILogger<RegisterModel> logger)
         {
+            _logger = logger;
             _signInService = signInService;
             _identityService = identityService;
             _emailSender = emailSender;
@@ -67,6 +70,8 @@ namespace LoginShmogin.Web.Pages
                 (_, var result) = await _identityService.CreateUserAsync(Input.Email, Input.Password);
                 if (result.Succeeded)
                 {
+                    _logger.LogInformation("Created new user with email {Email}", Input.Email);
+
                     var emailParams = await _identityService.GenerateEmailConfirmationTokenAsync(Input.Email);
                     var code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(emailParams.token));
                     var callbackUrl = Url.Page(

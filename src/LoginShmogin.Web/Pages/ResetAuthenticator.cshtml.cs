@@ -1,11 +1,11 @@
 using System.Text;
 using System.Threading.Tasks;
 using LoginShmogin.Application.Interfaces;
-using LoginShmogin.Application.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
 
 namespace LoginShmogin.Web.Pages
 {
@@ -13,9 +13,11 @@ namespace LoginShmogin.Web.Pages
     public class ResetAuthenticatorModel : PageModel
     {
         private readonly IIdentityService _identityService;
+        private readonly ILogger<ResetAuthenticatorModel> _logger;
 
-        public ResetAuthenticatorModel(IIdentityService identityService)
+        public ResetAuthenticatorModel(IIdentityService identityService, ILogger<ResetAuthenticatorModel> logger)
         {
+            _logger = logger;
             _identityService = identityService;
         }
         public string Email { get; set; }
@@ -32,10 +34,12 @@ namespace LoginShmogin.Web.Pages
                 var result = await _identityService.ResetAuthenticatorAsync(userId, token);
                 if (result.Succeeded)
                 {
+                    _logger.LogInformation("User with ID {UserId} reseted his authenticator", userId);
                     return RedirectToPage("/Login");
                 }
                 else
                 {
+                    _logger.LogError("Error occured resetting authenticator of user with Id {UserId}", userId);
                     return Page();
                 }
             }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
 
 namespace LoginShmogin.Web.Pages
 {
@@ -12,9 +13,11 @@ namespace LoginShmogin.Web.Pages
     public class ConfirmEmailModel : PageModel
     {
         private readonly IIdentityService _identityService;
+        private readonly ILogger<ConfirmEmailModel> _logger;
 
-        public ConfirmEmailModel(IIdentityService identityService)
+        public ConfirmEmailModel(IIdentityService identityService, ILogger<ConfirmEmailModel> logger)
         {
+            _logger = logger;
             _identityService = identityService;
         }
 
@@ -33,10 +36,12 @@ namespace LoginShmogin.Web.Pages
             if (result.Succeeded)
             {
                 StatusMessage = "Thank you for confirming your email.";
+                _logger.LogInformation("User with ID {UserId} confirmed his email", userId);
                 await _identityService.AddToRoleAsync(userId, "User");
             }
             else
             {
+                _logger.LogError("Error occured confirming email of user with ID {UserId}", userId);
                 StatusMessage = "Error confirming your email.";
             }
             return Page();

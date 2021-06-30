@@ -23,7 +23,7 @@ namespace LoginShmogin.Infrastructure.Identity
         public async Task<Result> SignInAsync(string email, string password, bool rememberMe)
         {
             var result = await _signInManager.PasswordSignInAsync(email,
-                               password, rememberMe, lockoutOnFailure: false);
+                               password, rememberMe, lockoutOnFailure: true);
             return result.ToApplicationResult();
         }
 

@@ -4,6 +4,7 @@ using LoginShmogin.Application.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
 
 namespace LoginShmogin.Web.Areas.Profile.Pages
 {
@@ -11,8 +12,10 @@ namespace LoginShmogin.Web.Areas.Profile.Pages
     {
         private readonly IExternalLoginService _externalLoginService;
         private readonly ICurrentUserService _currentUserService;
-        public LinksModel(IExternalLoginService externalLoginService, ICurrentUserService currentUserService)
+        private readonly ILogger<LinksModel> _logger;
+        public LinksModel(IExternalLoginService externalLoginService, ICurrentUserService currentUserService, ILogger<LinksModel> logger)
         {
+            _logger = logger;
             _currentUserService = currentUserService;
             _externalLoginService = externalLoginService;
         }
@@ -59,6 +62,7 @@ namespace LoginShmogin.Web.Areas.Profile.Pages
             if (result.Succeeded)
             {
                 StatusMessage = $"The {info.ProviderName} account was successfully linked";
+                _logger.LogInformation("User with ID '{UserId}' linked {ProviderName} account.", userId, info.ProviderName);
                 return RedirectToPage();
             }
             else
@@ -75,6 +79,7 @@ namespace LoginShmogin.Web.Areas.Profile.Pages
             if (result.Succeeded)
             {
                 StatusMessage = $"The {provider} account was successfully unlinked";
+                _logger.LogInformation("User with ID '{UserId}' unlinked {ProviderName} account.", userId, provider);
                 return RedirectToPage();
             }
             else

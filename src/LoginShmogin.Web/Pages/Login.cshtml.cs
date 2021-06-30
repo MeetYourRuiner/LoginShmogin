@@ -1,10 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using LoginShmogin.Application.Interfaces;
-using LoginShmogin.Application.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
 
 namespace LoginShmogin.Web.Pages
 {
@@ -14,9 +14,11 @@ namespace LoginShmogin.Web.Pages
         private readonly ISignInService _signInService;
         private readonly IIdentityService _identityService;
 
+        private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(IIdentityService identityService, ISignInService signInService)
+        public LoginModel(IIdentityService identityService, ISignInService signInService, ILogger<LoginModel> logger)
         {
+            _logger = logger;
             _identityService = identityService;
             _signInService = signInService;
         }
@@ -63,7 +65,13 @@ namespace LoginShmogin.Web.Pages
                                    Input.Password, Input.RememberMe);
                 if (result.Succeeded)
                 {
+                    _logger.LogInformation("User {Email} logged in.", Input.Email);
                     return LocalRedirect(returnUrl);
+                }
+                else if (result.IsLockedOut)
+                {
+                    ModelState.AddModelError(string.Empty, "User is locked out. Try again in 1 minute.");
+                    return Page();
                 }
                 else if (result.Is2FARequired)
                 {

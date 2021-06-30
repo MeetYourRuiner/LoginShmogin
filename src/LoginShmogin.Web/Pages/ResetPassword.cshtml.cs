@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
 
 namespace LoginShmogin.Web.Pages
 {
@@ -13,9 +14,11 @@ namespace LoginShmogin.Web.Pages
     public class ResetPasswordModel : PageModel
     {
         private readonly IIdentityService _identityService;
+        private readonly ILogger<ResetPasswordModel> _logger;
 
-        public ResetPasswordModel(IIdentityService identityService)
+        public ResetPasswordModel(IIdentityService identityService, ILogger<ResetPasswordModel> logger)
         {
+            _logger = logger;
             _identityService = identityService;
         }
 
@@ -59,9 +62,15 @@ namespace LoginShmogin.Web.Pages
             {
                 var result = await _identityService.ResetPasswordAsync(Input.UserId, Input.Token, Input.NewPassword);
                 if (result.Succeeded)
+                {
+                    _logger.LogInformation("User with ID {UserId} reseted his password", Input.UserId);
                     return RedirectToPage("/Login");
+                }
                 else
+                {
+                    _logger.LogError("Error occured resetting password of User with ID {UserId}", Input.UserId);
                     return Page();
+                }
             }
             return Page();
         }

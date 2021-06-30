@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
+using Microsoft.Extensions.Logging;
 
 namespace LoginShmogin.Web.Pages
 {
@@ -15,9 +16,11 @@ namespace LoginShmogin.Web.Pages
     {
         private readonly IEmailSender _emailSender;
         private readonly IIdentityService _identityService;
+        private readonly ILogger<AccountRecoveryModel> _logger;
 
-        public AccountRecoveryModel(IIdentityService identityService, IEmailSender emailSender)
+        public AccountRecoveryModel(IIdentityService identityService, IEmailSender emailSender, ILogger<AccountRecoveryModel> logger)
         {
+            _logger = logger;
             _identityService = identityService;
             _emailSender = emailSender;
         }
@@ -55,6 +58,7 @@ namespace LoginShmogin.Web.Pages
                 );
 
                 await _emailSender.SendEmailAsync(emailRequest);
+                _logger.LogInformation("Account recovery was requested for {Email}", Input.Email);
                 Message = "Recovery message was sent.";
             }
             return Page();
