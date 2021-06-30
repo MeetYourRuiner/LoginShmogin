@@ -50,8 +50,12 @@ namespace LoginShmogin.Web.Pages
             }
             else
             {
-                Input.UserId = userId;
-                Input.Token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+                Input = new InputModel
+                {
+                    UserId = userId,
+                    Token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code))
+                };
+
                 return Page();
             }
         }

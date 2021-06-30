@@ -7,7 +7,8 @@
 <form method="POST">
     <div class="form-group">
         <label asp-for="Input.Email"></label>
-        <input asp-for="Input.Email">
+        <input class="form-control w-25" asp-for="Input.Email">
+        <span class="text-danger" asp-validation-for="Input.Email"></span>
     </div>
     <input class="btn btn-primary" type="submit" value="Recover" />
     <small class="text-success">@Model.Message</small>
