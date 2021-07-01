@@ -1,4 +1,3 @@
-using System.Linq;
 using LoginShmogin.Application.Models;
 using Microsoft.AspNetCore.Identity;
 

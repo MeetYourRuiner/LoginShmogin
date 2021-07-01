@@ -1,5 +1,3 @@
-using System;
-
 namespace LoginShmogin.Infrastructure.Identity
 {
     public class CustomTokenProviders
