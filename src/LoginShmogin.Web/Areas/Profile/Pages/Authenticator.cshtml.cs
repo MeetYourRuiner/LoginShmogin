@@ -113,7 +113,7 @@ namespace LoginShmogin.Web.Areas.Profile.Pages
 
             await _authenticatorService.SetAuthenticatorEnabledAsync(userId, false);
             await _authenticatorService.ResetAuthenticatorKeyAsync(userId);
-            // _logger.LogInformation("User with ID '{UserId}' has reset their authentication app key.", userId);
+            _logger.LogInformation("User with ID '{UserId}' has reset their authentication app key.", userId);
 
             // await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your authenticator app key has been reset, you will need to configure your authenticator app using the new key.";

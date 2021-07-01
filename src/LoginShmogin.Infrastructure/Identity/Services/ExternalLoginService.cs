@@ -3,9 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using LoginShmogin.Application.Interfaces;
 using LoginShmogin.Application.Models;
+using LoginShmogin.Infrastructure.Identity.Extensions;
 using Microsoft.AspNetCore.Identity;
 
-namespace LoginShmogin.Infrastructure.Identity
+namespace LoginShmogin.Infrastructure.Identity.Services
 {
     public class ExternalLoginService : IExternalLoginService
     {

@@ -4,10 +4,11 @@ using System.Threading.Tasks;
 using LoginShmogin.Application.DTOs;
 using LoginShmogin.Application.Interfaces;
 using LoginShmogin.Application.Models;
+using LoginShmogin.Infrastructure.Identity.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace LoginShmogin.Infrastructure.Identity
+namespace LoginShmogin.Infrastructure.Identity.Services
 {
     public class RoleService : IRoleService
     {

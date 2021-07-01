@@ -1,7 +1,7 @@
 using LoginShmogin.Application.Models;
 using Microsoft.AspNetCore.Identity;
 
-namespace LoginShmogin.Infrastructure.Identity
+namespace LoginShmogin.Infrastructure.Identity.Extensions
 {
     public static class SignInResultExtensions
     {

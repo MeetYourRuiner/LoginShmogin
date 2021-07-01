@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using LoginShmogin.Application.Interfaces;
 using LoginShmogin.Infrastructure.Services;
 using LoginShmogin.Application.Models;
+using LoginShmogin.Infrastructure.Identity.Services;
 
 namespace LoginShmogin.Infrastructure
 {
